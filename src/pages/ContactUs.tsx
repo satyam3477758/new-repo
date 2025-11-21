@@ -72,7 +72,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <p className="font-medium">Address</p>
-                      <p className="text-gray-600">123 Farm Road, Greenville, CA 95501</p>
+                      <p className="text-gray-600">KIET Group of Institutions, Muradnagar, Ghaziabad 201206</p>
                     </div>
                   </div>
                   
@@ -84,7 +84,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <p className="font-medium">Phone</p>
-                      <p className="text-gray-600">(555) 123-4567</p>
+                      <p className="text-gray-600">+91 831847644</p>
                     </div>
                   </div>
                   
@@ -97,7 +97,7 @@ const ContactUs = () => {
                     </div>
                     <div>
                       <p className="font-medium">Email</p>
-                      <p className="text-gray-600">info@agroconnect.com</p>
+                      <p className="text-gray-600">mishrapriyanshu1975@gmail.com</p>
                     </div>
                   </div>
                   
@@ -109,8 +109,8 @@ const ContactUs = () => {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-medium">Hours</p>
-                      <p className="text-gray-600">Monday-Friday: 8am-6pm<br />Saturday: 9am-5pm</p>
+                      <p className="font-medium">Opening Hours</p>
+                      <p className="text-gray-600">Mon-Fri: 9am-6pm<br />Sat-Sun: 9am-4pm</p>
                     </div>
                   </div>
                 </div>

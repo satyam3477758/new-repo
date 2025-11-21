@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
@@ -8,7 +8,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { 
   ShoppingCart, 
   Menu, 
-  X, 
   User, 
   LogOut, 
   Eye, 
@@ -57,13 +56,13 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-3 group">
               <div className="relative">
                 <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-2.5 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
-                  <span className="font-bold text-lg">F</span>
+                  <img src="/favicon.svg" alt="AgroConnect" className="h-5 w-5 brightness-0 invert opacity-100" />
                 </div>
                 <div className="absolute inset-0 bg-primary/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
-                  agroconnect
+                  AgroConnect
                 </span>
                 <span className="text-xs text-muted-foreground -mt-1">
                   Fresh • Organic • Local
@@ -157,10 +156,10 @@ const Navbar = () => {
                       {/* Mobile Logo */}
                       <div className="flex items-center space-x-3 pb-4 border-b border-border">
                         <div className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground p-2 rounded-xl">
-                          <span className="font-bold text-lg">F</span>
+                          <img src="/favicon.svg" alt="AgroConnect" className="h-5 w-5 brightness-0 invert opacity-100" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-lg font-bold text-foreground">agroconnect</span>
+                          <span className="text-lg font-bold text-foreground">AgroConnect</span>
                           <span className="text-xs text-muted-foreground">Fresh • Organic • Local</span>
                         </div>
                       </div>

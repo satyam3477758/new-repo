@@ -20,18 +20,21 @@ const AboutUs = () => {
             <div className="space-y-6">
               <h2 className="text-3xl font-bold text-farm-green-dark">Our Story</h2>
               <p className="text-lg text-gray-700">
-                agroconnect began as a small family farm in 2008, dedicated to growing organic produce using sustainable methods.
-                What started as a roadside farm stand has grown into a trusted source of quality produce for our community.
+                AgroConnect started as an idea to solve a long-standing problem faced by farmers: limited market access and dependency on intermediaries. 
+                What began as a small initiative in 2025 has grown into a digital platform that directly connects farmers with consumers, ensuring fair pricing, transparency, and trust.
               </p>
               <p className="text-lg text-gray-700">
-                We work with a network of local family farms who share our commitment to sustainable agriculture, biodiversity, 
-                and ethical farming practices. Every product in our store is carefully selected to ensure the highest quality and freshness.
+                We collaborate with a network of local farmers and buyers who share our vision of sustainable agriculture, digital empowerment, and ethical trade. 
+                Every feature of our platform is designed to support farmers and provide consumers with fresh, high-quality produce.
               </p>
               
               <h3 className="text-2xl font-semibold text-farm-green-dark mt-8">Our Mission</h3>
               <p className="text-lg text-gray-700">
-                Our mission is to provide our customers with the freshest, most nutritious produce while supporting sustainable farming practices
-                that protect and heal our environment. We believe that good food comes from healthy soil, clean water, and careful stewardship of the land.
+                Our mission is to empower farmers by giving them direct access to markets, fair compensation for their hard work, and the tools to succeed in the digital economy. 
+                At the same time, we aim to provide consumers with fresh, affordable produce through a transparent and secure system.
+              </p>
+              <p className="text-lg text-gray-700">
+                AgroConnect believes that technology can bridge the gap between producers and buyers while promoting sustainability, fairness, and trust in the agricultural ecosystem.
               </p>
             </div>
             
@@ -51,25 +54,25 @@ const AboutUs = () => {
                     <div className="h-6 w-6 rounded-full bg-farm-green/10 flex items-center justify-center mr-3 mt-1">
                       <div className="h-3 w-3 bg-farm-green rounded-full"></div>
                     </div>
-                    <span className="text-gray-700"><span className="font-semibold">Sustainability:</span> We use farming practices that regenerate the soil and protect biodiversity.</span>
+                    <span className="text-gray-700"><span className="font-semibold">Digital Empowerment:</span> We provide farmers with digital tools and direct market access to succeed in the modern economy.</span>
                   </li>
                   <li className="flex items-start">
                     <div className="h-6 w-6 rounded-full bg-farm-green/10 flex items-center justify-center mr-3 mt-1">
                       <div className="h-3 w-3 bg-farm-green rounded-full"></div>
                     </div>
-                    <span className="text-gray-700"><span className="font-semibold">Community:</span> We support local farmers and create meaningful relationships with our customers.</span>
+                    <span className="text-gray-700"><span className="font-semibold">Fair Trade:</span> We ensure farmers receive fair compensation by eliminating intermediaries and promoting direct trade.</span>
                   </li>
                   <li className="flex items-start">
                     <div className="h-6 w-6 rounded-full bg-farm-green/10 flex items-center justify-center mr-3 mt-1">
                       <div className="h-3 w-3 bg-farm-green rounded-full"></div>
                     </div>
-                    <span className="text-gray-700"><span className="font-semibold">Transparency:</span> We are open about our growing practices and the origins of our products.</span>
+                    <span className="text-gray-700"><span className="font-semibold">Transparency:</span> We provide complete visibility into pricing, farming practices, and the journey from farm to table.</span>
                   </li>
                   <li className="flex items-start">
                     <div className="h-6 w-6 rounded-full bg-farm-green/10 flex items-center justify-center mr-3 mt-1">
                       <div className="h-3 w-3 bg-farm-green rounded-full"></div>
                     </div>
-                    <span className="text-gray-700"><span className="font-semibold">Quality:</span> We never compromise on the quality and freshness of our products.</span>
+                    <span className="text-gray-700"><span className="font-semibold">Sustainability:</span> We promote sustainable agriculture and ethical trade practices that benefit both farmers and consumers.</span>
                   </li>
                 </ul>
               </div>
@@ -78,41 +81,29 @@ const AboutUs = () => {
           
           <div className="bg-farm-green/5 rounded-2xl p-8 mb-16">
             <h2 className="text-3xl font-bold text-farm-green-dark mb-6 text-center">Meet Our Team</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="rounded-full overflow-hidden w-40 h-40 mx-auto mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+              <div className="text-center group cursor-pointer">
+                <div className="rounded-full overflow-hidden w-40 h-40 mx-auto mb-4 ring-4 ring-transparent transition-all duration-300 group-hover:ring-farm-green group-hover:scale-110 group-hover:shadow-2xl">
                   <img 
-                    src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=300&q=80" 
-                    alt="Sarah Johnson" 
-                    className="w-full h-full object-cover"
+                    src="/Priyanshu.jpg" 
+                    alt="Priyanshu" 
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-farm-green-dark">Sarah Johnson</h3>
-                <p className="text-gray-600">Founder & Head Farmer</p>
+                <h3 className="text-xl font-semibold text-farm-green-dark transition-colors duration-300 group-hover:text-farm-green">Priyanshu</h3>
+                <p className="text-gray-600 transition-all duration-300 group-hover:text-farm-green-dark group-hover:font-medium">Co-Founder & Developer</p>
               </div>
               
-              <div className="text-center">
-                <div className="rounded-full overflow-hidden w-40 h-40 mx-auto mb-4">
+              <div className="text-center group cursor-pointer">
+                <div className="rounded-full overflow-hidden w-40 h-40 mx-auto mb-4 ring-4 ring-transparent transition-all duration-300 group-hover:ring-farm-green group-hover:scale-110 group-hover:shadow-2xl">
                   <img 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80" 
-                    alt="Michael Wilson" 
-                    className="w-full h-full object-cover"
+                    src="/Saksham.jpg" 
+                    alt="Saksham" 
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
-                <h3 className="text-xl font-semibold text-farm-green-dark">Michael Wilson</h3>
-                <p className="text-gray-600">Operations Manager</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="rounded-full overflow-hidden w-40 h-40 mx-auto mb-4">
-                  <img 
-                    src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80" 
-                    alt="Emily Rodriguez" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-farm-green-dark">Emily Rodriguez</h3>
-                <p className="text-gray-600">Customer Relations</p>
+                <h3 className="text-xl font-semibold text-farm-green-dark transition-colors duration-300 group-hover:text-farm-green">Saksham</h3>
+                <p className="text-gray-600 transition-all duration-300 group-hover:text-farm-green-dark group-hover:font-medium">Co-Founder & Developer</p>
               </div>
             </div>
           </div>

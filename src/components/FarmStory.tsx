@@ -18,20 +18,20 @@ const FarmStory = () => {
             />
             <div className="absolute -bottom-8 -right-8 hidden md:block">
               <div className="bg-white p-6 rounded-xl shadow-lg">
-                <p className="text-4xl font-bold text-farm-green-dark">15+</p>
-                <p className="text-gray-600">Years of Farming</p>
+                <p className="text-4xl font-bold text-farm-green-dark">2025</p>
+                <p className="text-gray-600">Founded</p>
               </div>
             </div>
           </div>
           <div className="space-y-6">
             <h2 className="text-4xl font-bold text-farm-green-dark">Our Farm Story</h2>
             <p className="text-lg text-gray-700">
-              agroconnect began as a small family farm in 2008, dedicated to growing organic produce using sustainable methods.
-              What started as a roadside farm stand has grown into a trusted source of quality produce for our community.
+              AgroConnect began as an initiative in 2025 to solve the challenges farmers face in traditional marketplaces — low profits, exploitation by intermediaries, and limited access to buyers. 
+              What started as a student-driven idea has grown into a digital platform that directly connects farmers and consumers through technology.
             </p>
             <p className="text-lg text-gray-700">
-              We work with a network of local family farms who share our commitment to sustainable agriculture, biodiversity, 
-              and ethical farming practices. Every product in our store is carefully selected to ensure the highest quality and freshness.
+              We collaborate with farmers, buyers, and stakeholders who share our vision of transparency, sustainability, and fair trade. 
+              Every feature of our platform is carefully designed to ensure trust, quality, and ease of use for both farmers and consumers.
             </p>
             <div className="grid grid-cols-2 gap-4 my-8">
               <div className="flex items-center">
@@ -72,7 +72,7 @@ const FarmStory = () => {
               </div>
             </div>
             <Button 
-              onClick={() => navigate('/about-us')}
+              onClick={() => navigate('/about')}
               className="bg-farm-green hover:bg-farm-green-dark text-white rounded-full px-8 py-6"
             >
               Learn More About Us

@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProductGrid from '@/components/ProductGrid';
 import ProductFilters from '@/components/ProductFilters';
+import CheckoutDialog, { DeliveryDetails } from '@/components/CheckoutDialog';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ const Shop = () => {
   const [activeFilters, setActiveFilters] = useState<Record<string, any>>({});
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showCheckoutDialog, setShowCheckoutDialog] = useState(false);
 
   const handleCategoryChange = (category: string | null) => {
     setActiveCategory(category);
@@ -70,15 +72,34 @@ const Shop = () => {
       return;
     }
 
+    setShowCheckoutDialog(true);
+  };
+
+  const handleConfirmOrder = async (deliveryDetails: DeliveryDetails) => {
     setIsCheckingOut(true);
     try {
+      // Store delivery details in localStorage for the order
+      localStorage.setItem('lastDeliveryDetails', JSON.stringify(deliveryDetails));
+      
       const orderId = await checkout();
       if (orderId) {
-        // Redirect to orders page or show success message
-        window.location.href = '/orders';
+        setShowCheckoutDialog(false);
+        toast({
+          title: "Order placed successfully!",
+          description: "Your order has been confirmed. Check your orders page for details.",
+        });
+        // Redirect to orders page
+        setTimeout(() => {
+          window.location.href = '/orders';
+        }, 1500);
       }
     } catch (error) {
       console.error("Checkout error:", error);
+      toast({
+        title: "Order failed",
+        description: "There was an error placing your order. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsCheckingOut(false);
     }
@@ -225,7 +246,7 @@ const Shop = () => {
                 {cartItems.slice(0, 3).map((item) => (
                   <div key={item.id} className="flex items-center gap-3 text-sm">
                     <img 
-                      src={item.product.image_url || "/placeholder.svg"} 
+                      src={item.product.image || item.product.image_url || "/placeholder.svg"} 
                       alt={item.product.name}
                       className="w-8 h-8 rounded object-cover"
                     />
@@ -248,26 +269,16 @@ const Shop = () => {
                 <div className="flex justify-between items-center">
                   <span className="font-semibold">Total:</span>
                   <span className="font-bold text-lg text-primary">
-                    ${cartTotal.toFixed(2)}
+                    ₹{cartTotal.toFixed(2)}
                   </span>
                 </div>
                 
                 <Button 
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl py-6 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  {isCheckingOut ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="h-5 w-5 mr-2" />
-                      Place Order
-                    </>
-                  )}
+                  <CreditCard className="h-5 w-5 mr-2" />
+                  Place Order
                 </Button>
               </div>
             </div>
@@ -307,6 +318,14 @@ const Shop = () => {
           </div>
         </div>
       </main>
+      
+      <CheckoutDialog
+        isOpen={showCheckoutDialog}
+        onClose={() => setShowCheckoutDialog(false)}
+        onConfirm={handleConfirmOrder}
+        cartTotal={cartTotal}
+        isProcessing={isCheckingOut}
+      />
       
       <Footer />
     </div>
