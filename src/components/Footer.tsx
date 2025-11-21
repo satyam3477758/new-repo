@@ -1,8 +1,11 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
+  const navigate = useNavigate();
+  
   return (
     <footer className="bg-farm-earth-dark text-gray-200">
       <div className="container mx-auto px-4 py-16">
@@ -39,12 +42,12 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="#shop" className="hover:text-white transition-colors">Shop</a></li>
-              <li><a href="#categories" className="hover:text-white transition-colors">Categories</a></li>
-              <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#blog" className="hover:text-white transition-colors">Blog</a></li>
-              <li><a href="#contact" className="hover:text-white transition-colors">Contact</a></li>
+              <li><button onClick={() => navigate('/')} className="hover:text-white transition-colors text-left">Home</button></li>
+              <li><button onClick={() => navigate('/shop')} className="hover:text-white transition-colors text-left">Shop</button></li>
+              <li><button onClick={() => navigate('/shop')} className="hover:text-white transition-colors text-left">Categories</button></li>
+              <li><button onClick={() => navigate('/about')} className="hover:text-white transition-colors text-left">About Us</button></li>
+              <li><button onClick={() => navigate('/shop')} className="hover:text-white transition-colors text-left">Blog</button></li>
+              <li><button onClick={() => navigate('/contact')} className="hover:text-white transition-colors text-left">Contact</button></li>
             </ul>
           </div>
           
@@ -52,12 +55,12 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Customer Service</h3>
             <ul className="space-y-2">
-              <li><a href="#" className="hover:text-white transition-colors">My Account</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Order Tracking</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">FAQs</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Shipping Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Return Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><button onClick={() => navigate('/auth')} className="hover:text-white transition-colors text-left">My Account</button></li>
+              <li><button onClick={() => navigate('/orders')} className="hover:text-white transition-colors text-left">Order Tracking</button></li>
+              <li><button onClick={() => navigate('/faqs')} className="hover:text-white transition-colors text-left">FAQs</button></li>
+              <li><button onClick={() => navigate('/shipping-policy')} className="hover:text-white transition-colors text-left">Shipping Policy</button></li>
+              <li><button onClick={() => navigate('/return-policy')} className="hover:text-white transition-colors text-left">Return Policy</button></li>
+              <li><button onClick={() => navigate('/privacy-policy')} className="hover:text-white transition-colors text-left">Privacy Policy</button></li>
             </ul>
           </div>
           

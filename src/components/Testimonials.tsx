@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,72 +9,72 @@ import { Quote, Star, Users, Award, Sprout, Heart, MessageCircle } from "lucide-
 const testimonials = [
   {
     id: 1,
-    name: "Sarah Johnson",
+    name: "Priya Sharma",
     role: "Home Chef",
-    location: "San Francisco, CA",
+    location: "Mumbai, Maharashtra",
     rating: 5,
     text: "AgroConnect has completely transformed my cooking! The organic vegetables are incredibly fresh, and I can taste the difference in every dish. My family loves the variety and quality.",
-    image: "https://images.unsplash.com/photo-1494790108755-2616b612b647?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Verified Buyer",
     orderCount: 47,
     verified: true
   },
   {
     id: 2,
-    name: "Marcus Rodriguez",
+    name: "Rajesh Kumar",
     role: "Restaurant Owner",
-    location: "Austin, TX",
+    location: "Bangalore, Karnataka",
     rating: 5,
     text: "As a chef, I'm extremely picky about ingredients. AgroConnect consistently delivers restaurant-quality produce. Their farm-to-table approach aligns perfectly with our sustainability values.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Business Customer",
     orderCount: 124,
     verified: true
   },
   {
     id: 3,
-    name: "Emily Chen",
+    name: "Ananya Patel",
     role: "Nutritionist",
-    location: "Seattle, WA",
+    location: "Pune, Maharashtra",
     rating: 5,
     text: "I recommend AgroConnect to all my clients. The nutrient density and freshness of their produce is unmatched. Plus, knowing exactly where my food comes from gives me peace of mind.",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Health Professional",
     orderCount: 89,
     verified: true
   },
   {
     id: 4,
-    name: "David Thompson",
+    name: "Vikram Singh",
     role: "Organic Farmer",
-    location: "Portland, OR",
+    location: "Jaipur, Rajasthan",
     rating: 5,
     text: "Even as a farmer myself, I'm impressed with AgroConnect's quality standards. They truly support sustainable agriculture and make healthy eating accessible to everyone.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Industry Expert",
     orderCount: 76,
     verified: true
   },
   {
     id: 5,
-    name: "Lisa Park",
+    name: "Meera Reddy",
     role: "Wellness Coach",
-    location: "Denver, CO",
+    location: "Hyderabad, Telangana",
     rating: 5,
     text: "The convenience and quality combination is unbeatable. Fresh, organic produce delivered to my door saves me time while ensuring my family eats the best. Customer service is exceptional too!",
-    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Loyal Customer",
     orderCount: 156,
     verified: true
   },
   {
     id: 6,
-    name: "James Wilson",
+    name: "Arjun Mehta",
     role: "Food Blogger",
-    location: "Nashville, TN",
+    location: "Delhi, NCR",
     rating: 5,
     text: "I've featured AgroConnect in multiple articles. Their commitment to quality, transparency, and supporting local farmers makes them stand out in the crowded market.",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face&auto=format",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format",
     badge: "Influencer",
     orderCount: 203,
     verified: true
@@ -88,6 +89,8 @@ const stats = [
 ];
 
 const Testimonials = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Modern background with subtle patterns */}
@@ -239,7 +242,7 @@ const Testimonials = () => {
                 <Button 
                   size="lg"
                   className="flex-1 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  onClick={() => window.location.href = '/shop'}
+                  onClick={() => navigate('/shop')}
                 >
                   Start Shopping
                 </Button>
@@ -247,7 +250,7 @@ const Testimonials = () => {
                   variant="outline"
                   size="lg"
                   className="flex-1 rounded-full font-semibold border-2 transition-all duration-300"
-                  onClick={() => window.location.href = '/about-us'}
+                  onClick={() => navigate('/about')}
                 >
                   Learn More
                 </Button>

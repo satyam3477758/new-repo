@@ -29,7 +29,7 @@ const Hero = () => {
                 Shop Now <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button 
-                onClick={() => navigate('/about-us')}
+                onClick={() => navigate('/about')}
                 variant="outline" 
                 className="border-farm-green text-farm-green hover:bg-farm-green/10 rounded-full px-8 py-6"
               >

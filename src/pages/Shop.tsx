@@ -31,7 +31,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 
 const Shop = () => {
-  const { cartItems, cartTotal, checkout } = useCart();
+  const { cartItems, cartTotal, checkout, updateQuantity } = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -234,7 +234,7 @@ const Shop = () => {
         {/* Cart Summary - Fixed position */}
         {cartItems.length > 0 && (
           <div className="fixed bottom-6 right-6 z-40">
-            <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 min-w-[300px] animate-fade-in">
+            <div className="bg-card border border-border rounded-2xl shadow-2xl p-6 w-[350px] animate-fade-in">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg">Cart Summary</h3>
                 <Badge variant="secondary" className="px-3 py-1">
@@ -242,27 +242,41 @@ const Shop = () => {
                 </Badge>
               </div>
               
-              <div className="space-y-3 mb-4 max-h-32 overflow-y-auto">
-                {cartItems.slice(0, 3).map((item) => (
+              <div className="space-y-3 mb-4 max-h-48 overflow-y-auto">
+                {cartItems.map((item) => (
                   <div key={item.id} className="flex items-center gap-3 text-sm">
                     <img 
                       src={item.product.image || item.product.image_url || "/placeholder.svg"} 
                       alt={item.product.name}
-                      className="w-8 h-8 rounded object-cover"
+                      className="w-10 h-10 rounded object-cover"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="truncate font-medium">{item.product.name}</p>
+                      <p className="truncate font-medium text-xs">{item.product.name}</p>
                       <p className="text-muted-foreground text-xs">
-                        {item.quantity} × ₹{item.product.price.toFixed(2)}
+                        ₹{item.product.price.toFixed(2)} / {item.product.unit}
                       </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-6 w-6 p-0 rounded-full"
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      >
+                        -
+                      </Button>
+                      <span className="text-xs font-semibold w-6 text-center">{item.quantity}</span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-6 w-6 p-0 rounded-full"
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      >
+                        +
+                      </Button>
                     </div>
                   </div>
                 ))}
-                {cartItems.length > 3 && (
-                  <p className="text-xs text-muted-foreground text-center">
-                    +{cartItems.length - 3} more item{cartItems.length - 3 > 1 ? 's' : ''}
-                  </p>
-                )}
               </div>
               
               <div className="border-t border-border pt-4 space-y-3">

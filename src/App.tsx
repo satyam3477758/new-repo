@@ -18,6 +18,10 @@ import NotFound from "./pages/NotFound";
 import ImageAnalysis from "./pages/ImageAnalysis";
 import OrderHistory from "./pages/OrderHistory";
 import NearbyShops from "./pages/NearbyShops";
+import FAQs from "./pages/FAQs";
+import ShippingPolicy from "./pages/ShippingPolicy";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +55,10 @@ const App = () => (
                     <NearbyShops />
                   </ProtectedRoute>
                 } />
+                <Route path="/faqs" element={<FAQs />} />
+                <Route path="/shipping-policy" element={<ShippingPolicy />} />
+                <Route path="/return-policy" element={<ReturnPolicy />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
