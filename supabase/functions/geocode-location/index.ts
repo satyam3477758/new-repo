@@ -54,8 +54,8 @@ Be as accurate as possible with the coordinates.`;
       headers: {
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://farm-shops.lovable.app',
-        'X-Title': 'Farm Shops Finder'
+        'HTTP-Referer': 'https://agroconnect.app',
+        'X-Title': 'AgroConnect'
       },
       body: JSON.stringify({
         model: 'mistralai/mixtral-8x7b-instruct',

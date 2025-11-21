@@ -1,73 +1,117 @@
-# Welcome to your Lovable project
+# AgroConnect - Farm to Consumer Platform
 
-## Project info
+A modern web application connecting farmers directly with consumers, eliminating intermediaries and ensuring fair pricing and transparency.
 
-**URL**: https://lovable.dev/projects/1afa7b19-6b8c-47c4-b133-54009c8cc03f
+## Features
 
-## How can I edit this code?
+- **Direct Market Access**: Connect farmers directly with consumers
+- **Product Marketplace**: Browse and purchase fresh, organic produce
+- **Order Management**: Track orders with detailed delivery information
+- **User Authentication**: Secure login and registration system
+- **Shopping Cart**: Add products and checkout with delivery details
+- **Order History**: View past orders with product details and delivery information
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- **Frontend**: React + TypeScript + Vite
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Backend**: Supabase (PostgreSQL + Authentication)
+- **Routing**: React Router
+- **State Management**: React Context API
+- **Form Handling**: React Hook Form
+- **Icons**: Lucide React
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1afa7b19-6b8c-47c4-b133-54009c8cc03f) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js (v18 or higher)
+- npm or yarn
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+```bash
+git clone https://github.com/mishrapriyanshu1975/agro-connect.git
+cd agro-connect
+```
 
-Follow these steps:
+2. Install dependencies:
+```bash
+npm install
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Set up environment variables:
+Create a `.env` file in the root directory and add your Supabase credentials:
+```
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start the development server:
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Available Scripts
 
-**Use GitHub Codespaces**
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Project Structure
 
-## What technologies are used for this project?
+```
+agro-connect/
+├── src/
+│   ├── components/     # Reusable UI components
+│   ├── contexts/       # React Context providers
+│   ├── pages/          # Page components
+│   ├── data/           # Static data and constants
+│   ├── integrations/   # External service integrations
+│   └── assets/         # Images and static assets
+├── public/             # Public assets
+└── supabase/          # Supabase functions and migrations
+```
 
-This project is built with:
+## Features in Detail
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Shopping Experience
+- Browse products by category
+- Filter and search functionality
+- Add to cart with quantity selection
+- Secure checkout with delivery details form
 
-## How can I deploy this project?
+### Order Management
+- View order history with product images
+- Track order status
+- View delivery details for each order
+- Order confirmation and notifications
 
-Simply open [Lovable](https://lovable.dev/projects/1afa7b19-6b8c-47c4-b133-54009c8cc03f) and click on Share -> Publish.
+### User Features
+- User registration and authentication
+- Profile management
+- Favorites/wishlist functionality
+- Order tracking
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
 
-Yes, you can!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License.
+
+## Contact
+
+For any queries or support, please contact:
+- Email: support@agroconnect.com
+- GitHub: [@mishrapriyanshu1975](https://github.com/mishrapriyanshu1975)
+
+## Acknowledgments
+
+Built with modern web technologies to empower farmers and provide consumers with fresh, quality produce.

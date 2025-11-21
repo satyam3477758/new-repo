@@ -65,8 +65,8 @@ serve(async (req) => {
       headers = {
         'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://farmfresh.lovable.app',
-        'X-Title': 'FarmFresh AI Assistant',
+        'HTTP-Referer': 'https://agroconnect.app',
+        'X-Title': 'AgroConnect AI Assistant',
       };
     } 
     // Fallback to OpenAI if available

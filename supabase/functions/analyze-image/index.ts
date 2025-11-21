@@ -45,8 +45,8 @@ Deno.serve(async (req) => {
       headers: {
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://farmfresh.lovable.app',
-        'X-Title': 'FarmFresh Image Analysis',
+        'HTTP-Referer': 'https://agroconnect.app',
+        'X-Title': 'AgroConnect Image Analysis',
       },
       body: JSON.stringify({
         model: 'google/gemini-2.5-flash',

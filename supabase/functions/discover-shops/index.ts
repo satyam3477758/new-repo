@@ -52,8 +52,8 @@ Return ONLY a JSON array with this exact structure, no other text:
       headers: {
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://farm-shops.lovable.app',
-        'X-Title': 'Farm Shops Finder'
+        'HTTP-Referer': 'https://agroconnect.app',
+        'X-Title': 'AgroConnect'
       },
       body: JSON.stringify({
         model: 'google/gemini-2.0-flash-exp:free',
