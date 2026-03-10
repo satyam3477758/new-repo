@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 import { Loader2, Mail } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 

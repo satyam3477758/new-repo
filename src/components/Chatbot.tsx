@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface ChatMessage {
@@ -75,25 +74,36 @@ const Chatbot = () => {
     setIsTyping(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('chatbot', {
-        body: {
-          prompt: `You are ${botName}, a friendly agricultural assistant. Answer this question about farming, crops, or agriculture: "${inputMessage.trim()}". Be helpful, informative, and conversational. If the question is not related to agriculture, politely redirect to farming topics.`
-        },
+      const OPENROUTER_API_KEY = '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';
+      const promptText = `You are ${botName}, a friendly agricultural assistant. Answer this question about farming, crops, or agriculture: "${inputMessage.trim()}". Be helpful, informative, and conversational. If the question is not related to agriculture, politely redirect to farming topics.`;
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${session.access_token}`
-        }
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://agroconnect.app',
+          'X-Title': 'AgroConnect Chatbot'
+        },
+        body: JSON.stringify({
+          model: 'arcee-ai/trinity-mini:free',
+          messages: [
+            { role: 'user', content: promptText }
+          ]
+        })
       });
 
-      if (error) throw error;
-
-      if (data?.error) {
-        throw new Error(data.error);
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
       }
+
+      const responseData = await response.json();
+      const replyText = responseData.choices?.[0]?.message?.content;
 
       const botResponse: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: 'assistant',
-        content: data?.reply || "I'm sorry, I couldn't process your request right now. Please try again!",
+        content: replyText || "I'm sorry, I couldn't process your request right now. Please try again!",
         timestamp: new Date()
       };
 

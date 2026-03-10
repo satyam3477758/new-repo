@@ -6,7 +6,6 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Upload, Eye, Camera, CheckCircle, Sparkles, Cpu, Image as ImageIcon } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import AnalysisChart from "./AnalysisChart";
 
@@ -126,68 +125,82 @@ const ImageUpload = () => {
     
     try {
       console.log("🖼️ Sending image for AI Vision analysis...");
-      console.log("📊 Image data length:", selectedImage?.length);
       
-      const { data, error } = await supabase.functions.invoke<ImageAnalysisResult>('analyze-image', {
-        body: {
-          image: selectedImage,
-          prompt: "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise."
-        },
-        headers: {
-          Authorization: `Bearer ${session.access_token}`
-        }
-      });
+      const OPENROUTER_API_KEY = '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';
+      const promptText = "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise.";
 
-      console.log("📡 Function response:", { data, error });
-      console.log("🔍 Analysis preview:", data?.analysis?.slice(0, 100));
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://agroconnect.app',
+          'X-Title': 'AgroConnect Image Analysis',
+        },
+        body: JSON.stringify({
+          model: 'nvidia/nemotron-nano-12b-v2-vl:free',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'text',
+                  text: promptText
+                },
+                {
+                  type: 'image_url',
+                  image_url: {
+                    url: selectedImage,
+                    detail: 'auto'
+                  }
+                }
+              ]
+            }
+          ],
+          max_tokens: 300,
+          temperature: 0.2
+        }),
+      });
 
       // Complete progress first
       setAnalysisProgress(100);
       
       // Handle the response
-      setTimeout(() => {
-        if (error) {
-          console.error("❌ Supabase function error:", error);
-          setAnalysisResult(`Demo Analysis Results:
-
-1) Crop Type: Image analysis requires API configuration
-2) Health Status: Unable to assess without AI vision setup
-3) Growth Stage: Analysis not available in demo mode
-4) Visible Issues: Demo mode - configure OpenRouter API key
-5) Recommendations: Set up API key in Supabase for full functionality
-
-This is a demonstration. For real AI analysis, configure your OpenRouter API key in Supabase Edge Functions.`);
-          
+      setTimeout(async () => {
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("❌ OpenRouter API error:", response.status, errorText);
+          setAnalysisResult(`Demo Analysis Results:\n\n1) Crop Type: Image analysis failed\n2) Health Status: API Error\n3) Growth Stage: Analysis not available\n4) Visible Issues: Check API configuration\n5) Recommendations: Please try again later.`);
           toast({
-            title: "Demo analysis complete",
-            description: "Configure OpenRouter API key for real AI analysis.",
-          });
-        } else if (data?.analysis) {
-          console.log("✅ Setting analysis result");
-          setAnalysisResult(data.analysis);
-          toast({
-            title: "Analysis complete",
-            description: "Image has been successfully analyzed with AI vision.",
+            title: "Analysis Failed",
+            description: "There was a problem communicating with the AI service.",
+            variant: "destructive"
           });
         } else {
-          console.log("⚠️ No analysis data received:", data);
-          // Fallback if no analysis is returned
-          setAnalysisResult(`Demo Analysis Results:
-
-1) Crop Type: Unable to determine - API response incomplete
-2) Health Status: Requires proper API configuration
-3) Growth Stage: Analysis not available
-4) Visible Issues: Demo mode active
-5) Recommendations: Configure OpenRouter API key for detailed analysis
-
-This is a demonstration response. For real AI-powered image analysis, please configure your OpenRouter API key.`);
-          
-          toast({
-            title: "Demo analysis shown",
-            description: "Set up OpenRouter API key for real AI analysis.",
-          });
+          try {
+            const data = await response.json();
+            const analysisText = data.choices?.[0]?.message?.content;
+            
+            if (analysisText) {
+              console.log("✅ Setting analysis result");
+              setAnalysisResult(analysisText);
+              toast({
+                title: "Analysis complete",
+                description: "Image has been successfully analyzed with AI vision.",
+              });
+            } else {
+              throw new Error("Empty response from AI");
+            }
+          } catch(err) {
+            console.error(err);
+            setAnalysisResult(`Demo Analysis Results:\n\n1) Crop Type: Unable to determine\n2) Health Status: Invalid API response\n3) Growth Stage: Analysis not available\n4) Visible Issues: Parse error\n5) Recommendations: Please try again.`);
+            toast({
+              title: "Analysis Error",
+              description: "Could not parse the AI response.",
+            });
+          }
         }
-        
+        setIsAnalyzing(false);
         setIsAnalyzing(false);
       }, 800);
       

@@ -4,8 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingBag, Calendar, MapPin, Phone, Mail, Package } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-
 const OrderHistory = () => {
   const { getUserOrders, user } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
@@ -17,30 +15,21 @@ const OrderHistory = () => {
       try {
         const userOrders = await getUserOrders();
         
-        // Fetch product details for each order item
-        const ordersWithProducts = await Promise.all(
-          userOrders.map(async (order: any) => {
-            if (order.order_items && order.order_items.length > 0) {
-              const itemsWithProducts = await Promise.all(
-                order.order_items.map(async (item: any) => {
-                  const { data: productData } = await supabase
-                    .from('products')
-                    .select('name, image_url')
-                    .eq('id', item.product_id)
-                    .single();
-
-                  return {
-                    ...item,
-                    product_name: productData?.name || 'Unknown Product',
-                    product_image: productData?.image_url
-                  };
-                })
-              );
-              return { ...order, order_items: itemsWithProducts };
-            }
-            return order;
-          })
-        );
+        // We don't have Supabase anymore, so we just use the data natively 
+        // or provide fallbacks if some fields are missing.
+        const ordersWithProducts = userOrders.map((order: any) => {
+          if (order.order_items && order.order_items.length > 0) {
+            const itemsWithProducts = order.order_items.map((item: any) => {
+              return {
+                ...item,
+                product_name: item.product_name || `Product #${item.product_id}`,
+                product_image: item.product_image || '/placeholder.svg'
+              };
+            });
+            return { ...order, order_items: itemsWithProducts };
+          }
+          return order;
+        });
         
         setOrders(ordersWithProducts);
         

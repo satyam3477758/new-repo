@@ -24,55 +24,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        if (event === 'SIGNED_IN') {
-          toast({
-            title: "Signed in successfully",
-            description: "Welcome back to AgroConnect!",
-          });
-        }
-        if (event === 'SIGNED_OUT') {
-          toast({
-            title: "Signed out successfully",
-            description: "You have been signed out.",
-          });
-        }
+    setIsLoading(true);
+    
+    // Get initial session from localStorage
+    const savedSession = localStorage.getItem('agroconnect_session');
+    if (savedSession) {
+      try {
+        const parsedSession = JSON.parse(savedSession) as Session;
+        setSession(parsedSession);
+        setUser(parsedSession.user);
+      } catch (e) {
+        console.error("Failed to parse saved session", e);
+        localStorage.removeItem('agroconnect_session');
       }
-    );
+    }
+    
+    setIsLoading(false);
+  }, []);
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
+  const createMockSession = (email: string): Session => {
+    const mockUser = {
+      id: `usr_${Date.now()}`,
+      email,
+      app_metadata: { provider: 'email' },
+      user_metadata: {},
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+    } as User;
 
-    return () => subscription.unsubscribe();
-  }, [toast]);
+    return {
+      access_token: `mock_jwt_token_${Math.random().toString(36).substr(2)}`,
+      refresh_token: `mock_refresh_token`,
+      expires_in: 3600,
+      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      token_type: 'bearer',
+      user: mockUser,
+    };
+  };
 
   const signUp = async (email: string, password: string) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      const { error } = await supabase.auth.signUp({ 
-        email, 
-        password,
-        options: {
-          emailRedirectTo: redirectUrl
-        }
-      });
-      if (error) throw error;
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const session = createMockSession(email);
+      localStorage.setItem('agroconnect_session', JSON.stringify(session));
+      setSession(session);
+      setUser(session.user);
+      
       toast({
         title: "Account created successfully",
-        description: "Please check your email to verify your account.",
+        description: "Welcome to AgroConnect! You have been logged in automatically.",
       });
     } catch (error: any) {
       toast({
         title: "Error signing up",
-        description: error.message,
+        description: error.message || "An unexpected error occurred",
         variant: "destructive",
       });
       throw error;
@@ -81,12 +88,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const session = createMockSession(email);
+      localStorage.setItem('agroconnect_session', JSON.stringify(session));
+      setSession(session);
+      setUser(session.user);
+      
+      toast({
+        title: "Signed in successfully",
+        description: `Welcome back, ${email}`,
+      });
     } catch (error: any) {
       toast({
         title: "Error signing in",
-        description: error.message,
+        description: error.message || "Invalid credentials",
         variant: "destructive",
       });
       throw error;
@@ -95,8 +112,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
+      await new Promise(resolve => setTimeout(resolve, 300));
+      localStorage.removeItem('agroconnect_session');
+      setSession(null);
+      setUser(null);
+      
+      toast({
+        title: "Signed out",
+        description: "You have been logged out successfully.",
+      });
     } catch (error: any) {
       toast({
         title: "Error signing out",
@@ -107,47 +131,58 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Function to get user's orders
+  // Function to get user's orders (mocked)
   const getUserOrders = async () => {
     if (!user) return [];
     
-    try {
-      const { data: orders, error } = await supabase
-        .from('orders')
-        .select(`
-          id,
-          status,
-          created_at,
-          updated_at,
-          order_items (
-            id,
-            product_id,
-            quantity,
-            price_at_purchase,
-            created_at
-          )
-        `)
-        .order('created_at', { ascending: false });
-        
-      if (error) throw error;
-      return orders || [];
-    } catch (error: any) {
-      toast({
-        title: "Error fetching orders",
-        description: error.message,
-        variant: "destructive",
-      });
-      return [];
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 600));
+    
+    // Attempt to load mock orders from localStorage
+    const savedOrders = localStorage.getItem('agroconnect_orders');
+    if (savedOrders) {
+      try {
+        return JSON.parse(savedOrders);
+      } catch (e) {
+        console.error("Failed to parse orders", e);
+      }
     }
+    
+    return [];
   };
 
-  // Function to create a new order
+  // Function to create a new order (mocked)
   const createOrder = async (items: { productId: number; quantity: number; price: number }[]) => {
     if (!user) return null;
     
     try {
-      // For demo purposes, simulate order creation
+      // Simulate order creation
       const orderId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const newOrder = {
+        id: orderId,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        order_items: items.map((item, index) => ({
+          id: `item_${Date.now()}_${index}`,
+          product_id: item.productId,
+          quantity: item.quantity,
+          price_at_purchase: item.price,
+          created_at: new Date().toISOString(),
+        }))
+      };
+
+      // Save to localStorage
+      const existingOrdersStr = localStorage.getItem('agroconnect_orders');
+      let existingOrders = [];
+      if (existingOrdersStr) {
+        try {
+          existingOrders = JSON.parse(existingOrdersStr);
+        } catch(e) {}
+      }
+      
+      existingOrders.unshift(newOrder); // Add to beginning
+      localStorage.setItem('agroconnect_orders', JSON.stringify(existingOrders));
       
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));

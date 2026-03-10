@@ -5,7 +5,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Navigation, Store, Loader2, TrendingUp, Award, DollarSign, Heart, Leaf, ShoppingBag } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 
@@ -32,7 +31,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
   const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -65,11 +64,11 @@ const NearbyShopsMap = () => {
     }
 
     setIsLoadingLocation(true);
-    
+
     // Check localStorage for cached location (valid for 5 minutes)
     const cachedLocation = localStorage.getItem('userLocation');
     const cachedTimestamp = localStorage.getItem('userLocationTimestamp');
-    
+
     if (cachedLocation && cachedTimestamp) {
       const age = Date.now() - parseInt(cachedTimestamp);
       if (age < 5 * 60 * 1000) { // 5 minutes
@@ -84,16 +83,16 @@ const NearbyShopsMap = () => {
         return;
       }
     }
-    
+
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const coords: [number, number] = [position.coords.latitude, position.coords.longitude];
-          
+
           // Cache location
           localStorage.setItem('userLocation', JSON.stringify(coords));
           localStorage.setItem('userLocationTimestamp', Date.now().toString());
-          
+
           setUserLocation(coords);
           setIsLoadingLocation(false);
           toast({
@@ -140,7 +139,7 @@ const NearbyShopsMap = () => {
     // Check cache first (valid for 10 minutes)
     const cacheKey = `${coords[0].toFixed(2)},${coords[1].toFixed(2)}`; // Round to 2 decimals for cache
     const cached = shopsCache[cacheKey];
-    
+
     if (cached && Date.now() - cached.timestamp < 10 * 60 * 1000) { // 10 minutes
       console.log('Using cached shops data');
       setShops(cached.shops);
@@ -150,30 +149,86 @@ const NearbyShopsMap = () => {
       });
       return;
     }
-    
+
     setIsLoadingShops(true);
     try {
       console.log('Calling discover-shops function with coords:', coords);
-      
-      const { data, error } = await supabase.functions.invoke('discover-shops', {
-        body: { 
-          latitude: coords[0], 
-          longitude: coords[1] 
-        },
+
+      const OPENROUTER_API_KEY = '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';
+      const promptText = `Generate a realistic list of 8-10 farm shops and organic markets near coordinates ${coords[0]}, ${coords[1]}.
+For each shop, provide detailed analysis including:
+- id: unique identifier
+- name: A realistic farm shop name
+- address: A plausible street address in the area
+- lat: Latitude (vary by 0.01-0.05 from ${coords[0]})
+- lng: Longitude (vary by 0.01-0.05 from ${coords[1]})
+- description: Brief description of what they sell (organic produce, dairy, meat, etc.)
+- qualityScore: Product quality rating (0-100)
+- priceCompetitiveness: How competitive the prices are (0-100, higher means better value)
+- popularityScore: Shop popularity rating (0-100)
+- environmentalScore: Environmental sustainability rating (0-100)
+- varietyScore: Product variety rating (0-100)
+
+Return ONLY a JSON array with this exact structure, no other text:
+[{"id": "1", "name": "...", "address": "...", "lat": number, "lng": number, "description": "...", "qualityScore": number, "priceCompetitiveness": number, "popularityScore": number, "environmentalScore": number, "varietyScore": number}]`;
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
         headers: {
-          Authorization: `Bearer ${session?.access_token}`
-        }
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://agroconnect.app',
+          'X-Title': 'AgroConnect'
+        },
+        body: JSON.stringify({
+          model: 'arcee-ai/trinity-mini:free',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant that generates realistic farm shop data with detailed analysis scores in JSON format. Always return valid JSON arrays only.'
+            },
+            { role: 'user', content: promptText }
+          ],
+        }),
       });
 
-      console.log('Response from discover-shops:', { data, error });
-
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
+      if (!response.ok) {
+        throw new Error('AI API error: ' + response.status);
       }
 
-      if (data?.shops && Array.isArray(data.shops)) {
-        const shopsWithDistance = data.shops
+      const responseData = await response.json();
+      const aiResponse = responseData.choices?.[0]?.message?.content || '[]';
+      console.log('AI Response:', aiResponse);
+
+      let parsedShops: any[] = [];
+      try {
+        const jsonMatch = aiResponse.match(/\[[\s\S]*\]/);
+        if (jsonMatch) {
+          parsedShops = JSON.parse(jsonMatch[0]);
+        } else {
+          parsedShops = JSON.parse(aiResponse);
+        }
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError);
+        // Fallback shops
+        parsedShops = [
+          {
+            id: "1", name: "Green Valley Farm Shop", address: "123 Farm Road",
+            lat: coords[0] + 0.02, lng: coords[1] + 0.02,
+            description: "Fresh organic vegetables and dairy products",
+            qualityScore: 85, priceCompetitiveness: 75, popularityScore: 80, environmentalScore: 90, varietyScore: 70
+          },
+          {
+            id: "2", name: "Sunrise Organic Market", address: "456 Market Street",
+            lat: coords[0] - 0.03, lng: coords[1] + 0.01,
+            description: "Locally sourced organic produce and artisan goods",
+            qualityScore: 78, priceCompetitiveness: 82, popularityScore: 75, environmentalScore: 85, varietyScore: 80
+          }
+        ];
+      }
+
+      if (parsedShops && Array.isArray(parsedShops)) {
+        const shopsWithDistance = parsedShops
           .filter((shop: any) => shop && typeof shop === 'object' && shop.lat && shop.lng)
           .map((shop: any) => ({
             id: shop.id || Math.random().toString(),
@@ -182,13 +237,18 @@ const NearbyShopsMap = () => {
             lat: Number(shop.lat),
             lng: Number(shop.lng),
             description: shop.description || 'No description',
+            qualityScore: shop.qualityScore || 0,
+            priceCompetitiveness: shop.priceCompetitiveness || 0,
+            popularityScore: shop.popularityScore || 0,
+            environmentalScore: shop.environmentalScore || 0,
+            varietyScore: shop.varietyScore || 0,
             distance: calculateDistance(coords[0], coords[1], Number(shop.lat), Number(shop.lng))
           }))
           .sort((a: Shop, b: Shop) => a.distance - b.distance);
-        
+
         console.log('Processed shops:', shopsWithDistance);
         setShops(shopsWithDistance);
-        
+
         // Cache the results
         setShopsCache(prev => ({
           ...prev,
@@ -197,13 +257,13 @@ const NearbyShopsMap = () => {
             timestamp: Date.now()
           }
         }));
-        
+
         toast({
           title: "Shops discovered",
           description: `Found ${shopsWithDistance.length} nearby farm shops`,
         });
       } else {
-        console.warn('No shops in response:', data);
+        console.warn('No shops in parsed data:', parsedShops);
         toast({
           title: "No shops found",
           description: "Could not find nearby shops. Please try again.",
@@ -507,8 +567,8 @@ const NearbyShopsMap = () => {
                         Est. travel cost: ₹{(shop.distance * 8).toFixed(2)}
                       </div>
                     </div>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       variant="outline"
                       onClick={() => openDirections(shop.lat, shop.lng, shop.name)}
                     >

@@ -1,7 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 type Product = {
@@ -41,63 +40,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   const cartTotal = cartItems.reduce((total, item) => total + (item.product.price * item.quantity), 0);
 
-  // Fetch cart items from Supabase when user changes
+  // Fetch cart items from localStorage exclusively
   useEffect(() => {
     const fetchCartItems = async () => {
-      if (!user) {
-        // If no user is logged in, try to load from localStorage
-        const savedCart = localStorage.getItem("cart");
-        if (savedCart) {
-          try {
-            setCartItems(JSON.parse(savedCart));
-          } catch (error) {
-            console.error("Error parsing saved cart:", error);
-            localStorage.removeItem("cart");
-          }
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        try {
+          setCartItems(JSON.parse(savedCart));
+        } catch (error) {
+          console.error("Error parsing saved cart:", error);
+          localStorage.removeItem("cart");
         }
-        return;
-      }
-
-      try {
-        const { data, error } = await supabase
-          .from('cart_items')
-          .select(`
-            id,
-            quantity,
-            product_id
-          `)
-          .eq('user_id', user.id);
-
-        if (error) {
-          console.error("Error fetching cart items:", error);
-          return;
-        }
-
-        if (data) {
-          // We need to transform database records into CartItem objects
-          const cartItemPromises = data.map(async (item) => {
-            // Fetch product details for each cart item
-            const { data: productData } = await supabase
-              .from('products')
-              .select('*')
-              .eq('id', item.product_id)
-              .single();
-            
-            if (productData) {
-              return {
-                id: item.id,
-                product: productData as Product,
-                quantity: item.quantity
-              };
-            }
-            return null;
-          });
-
-          const resolvedCartItems = (await Promise.all(cartItemPromises)).filter(Boolean) as CartItem[];
-          setCartItems(resolvedCartItems);
-        }
-      } catch (error) {
-        console.error("Error in cart fetch:", error);
       }
     };
 

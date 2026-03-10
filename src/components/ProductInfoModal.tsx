@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Bot, Sparkles, X, Leaf, Heart, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 interface ProductInfoModalProps {
   isOpen: boolean;
@@ -34,25 +33,39 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke('chatbot', {
-        body: {
-          prompt: `Provide detailed information about ${productName} as a ${category?.toLowerCase() || 'agricultural product'}. Include: 
+      const OPENROUTER_API_KEY = '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';
+      const promptText = `Provide detailed information about ${productName} as a ${category?.toLowerCase() || 'agricultural product'}. Include: 
           1) Nutritional benefits and health properties
           2) Growing conditions and farming requirements  
           3) Culinary uses and preparation tips
           4) Storage and freshness tips
           5) Interesting facts or varieties
-          Be informative, engaging, and focus on practical information for consumers. Format with clear sections.`
-        }
+          Be informative, engaging, and focus on practical information for consumers. Format with clear sections.`;
+
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+          'Content-Type': 'application/json',
+          'HTTP-Referer': 'https://agroconnect.app',
+          'X-Title': 'AgroConnect Chatbot'
+        },
+        body: JSON.stringify({
+          model: 'arcee-ai/trinity-mini:free',
+          messages: [
+            { role: 'user', content: promptText }
+          ]
+        })
       });
 
-      if (error) throw error;
-
-      if (data?.error) {
-        throw new Error(data.error);
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status}`);
       }
 
-      setAiInfo(data?.reply || "Information not available at the moment.");
+      const responseData = await response.json();
+      const replyText = responseData.choices?.[0]?.message?.content;
+
+      setAiInfo(replyText || "Information not available at the moment.");
       setHasLoadedInfo(true);
 
     } catch (error) {
