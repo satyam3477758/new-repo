@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { callAI } from "@/lib/openrouter";
 
 interface ChatMessage {
   id: string;
@@ -76,25 +77,10 @@ const Chatbot = () => {
     try {
       const promptText = `You are ${botName}, a friendly agricultural assistant. Answer this question about farming, crops, or agriculture: "${inputMessage.trim()}". Be helpful, informative, and conversational. If the question is not related to agriculture, politely redirect to farming topics.`;
 
-      const response = await fetch('/api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'arcee-ai/trinity-mini:free',
-          messages: [
-            { role: 'user', content: promptText }
-          ]
-        })
+      const replyText = await callAI({
+        model: 'arcee-ai/trinity-mini:free',
+        messages: [{ role: 'user', content: promptText }]
       });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      const replyText = responseData.choices?.[0]?.message?.content;
 
       const botResponse: ChatMessage = {
         id: `assistant-${Date.now()}`,

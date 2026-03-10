@@ -7,6 +7,7 @@ import { MapPin, Navigation, Store, Loader2, TrendingUp, Award, DollarSign, Hear
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+import { callAI } from '@/lib/openrouter';
 
 const Map = lazy(() => import('./Map'));
 
@@ -171,29 +172,17 @@ For each shop, provide detailed analysis including:
 Return ONLY a JSON array with this exact structure, no other text:
 [{"id": "1", "name": "...", "address": "...", "lat": number, "lng": number, "description": "...", "qualityScore": number, "priceCompetitiveness": number, "popularityScore": number, "environmentalScore": number, "varietyScore": number}]`;
 
-      const response = await fetch('/api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'arcee-ai/trinity-mini:free',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a helpful assistant that generates realistic farm shop data with detailed analysis scores in JSON format. Always return valid JSON arrays only.'
-            },
-            { role: 'user', content: promptText }
-          ],
-        }),
+      const aiResponse = await callAI({
+        model: 'arcee-ai/trinity-mini:free',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful assistant that generates realistic farm shop data with detailed analysis scores in JSON format. Always return valid JSON arrays only.'
+          },
+          { role: 'user', content: promptText }
+        ],
       });
 
-      if (!response.ok) {
-        throw new Error('AI API error: ' + response.status);
-      }
-
-      const responseData = await response.json();
-      const aiResponse = responseData.choices?.[0]?.message?.content || '[]';
       console.log('AI Response:', aiResponse);
 
       let parsedShops: any[] = [];

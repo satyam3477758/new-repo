@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Bot, Sparkles, X, Leaf, Heart, Star } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { callAI } from "@/lib/openrouter";
 
 interface ProductInfoModalProps {
   isOpen: boolean;
@@ -41,25 +42,10 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({
           5) Interesting facts or varieties
           Be informative, engaging, and focus on practical information for consumers. Format with clear sections.`;
 
-      const response = await fetch('/api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'arcee-ai/trinity-mini:free',
-          messages: [
-            { role: 'user', content: promptText }
-          ]
-        })
+      const replyText = await callAI({
+        model: 'arcee-ai/trinity-mini:free',
+        messages: [{ role: 'user', content: promptText }]
       });
-
-      if (!response.ok) {
-        throw new Error(`API error: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      const replyText = responseData.choices?.[0]?.message?.content;
 
       setAiInfo(replyText || "Information not available at the moment.");
       setHasLoadedInfo(true);

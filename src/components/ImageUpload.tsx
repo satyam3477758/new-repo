@@ -8,6 +8,7 @@ import { Loader2, Upload, Eye, Camera, CheckCircle, Sparkles, Cpu, Image as Imag
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import AnalysisChart from "./AnalysisChart";
+import { callAI } from "@/lib/openrouter";
 
 interface ImageAnalysisResult {
   analysis: string;
@@ -128,76 +129,30 @@ const ImageUpload = () => {
       
       const promptText = "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise.";
 
-      const response = await fetch('/api/ai', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'nvidia/nemotron-nano-12b-v2-vl:free',
-          messages: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'text',
-                  text: promptText
-                },
-                {
-                  type: 'image_url',
-                  image_url: {
-                    url: selectedImage,
-                    detail: 'auto'
-                  }
-                }
-              ]
-            }
-          ],
-          max_tokens: 300,
-          temperature: 0.2
-        }),
+      const analysisText = await callAI({
+        model: 'nvidia/nemotron-nano-12b-v2-vl:free',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: promptText },
+              { type: 'image_url', image_url: { url: selectedImage, detail: 'auto' } }
+            ]
+          }
+        ],
+        max_tokens: 300,
+        temperature: 0.2
       });
 
-      // Complete progress first
       setAnalysisProgress(100);
-      
-      // Handle the response
-      setTimeout(async () => {
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("❌ OpenRouter API error:", response.status, errorText);
-          setAnalysisResult(`Demo Analysis Results:\n\n1) Crop Type: Image analysis failed\n2) Health Status: API Error\n3) Growth Stage: Analysis not available\n4) Visible Issues: Check API configuration\n5) Recommendations: Please try again later.`);
-          toast({
-            title: "Analysis Failed",
-            description: "There was a problem communicating with the AI service.",
-            variant: "destructive"
-          });
-        } else {
-          try {
-            const data = await response.json();
-            const analysisText = data.choices?.[0]?.message?.content;
-            
-            if (analysisText) {
-              console.log("✅ Setting analysis result");
-              setAnalysisResult(analysisText);
-              toast({
-                title: "Analysis complete",
-                description: "Image has been successfully analyzed with AI vision.",
-              });
-            } else {
-              throw new Error("Empty response from AI");
-            }
-          } catch(err) {
-            console.error(err);
-            setAnalysisResult(`Demo Analysis Results:\n\n1) Crop Type: Unable to determine\n2) Health Status: Invalid API response\n3) Growth Stage: Analysis not available\n4) Visible Issues: Parse error\n5) Recommendations: Please try again.`);
-            toast({
-              title: "Analysis Error",
-              description: "Could not parse the AI response.",
-            });
-          }
-        }
+
+      setTimeout(() => {
+        setAnalysisResult(analysisText);
         setIsAnalyzing(false);
-        setIsAnalyzing(false);
+        toast({
+          title: "Analysis complete",
+          description: "Image has been successfully analyzed with AI vision.",
+        });
       }, 800);
       
     } catch (error) {
