@@ -74,16 +74,12 @@ const Chatbot = () => {
     setIsTyping(true);
 
     try {
-      const OPENROUTER_API_KEY = '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';
       const promptText = `You are ${botName}, a friendly agricultural assistant. Answer this question about farming, crops, or agriculture: "${inputMessage.trim()}". Be helpful, informative, and conversational. If the question is not related to agriculture, politely redirect to farming topics.`;
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://agroconnect.app',
-          'X-Title': 'AgroConnect Chatbot'
         },
         body: JSON.stringify({
           model: 'arcee-ai/trinity-mini:free',

@@ -33,7 +33,6 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({
     setIsLoading(true);
     
     try {
-      const OPENROUTER_API_KEY = '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';
       const promptText = `Provide detailed information about ${productName} as a ${category?.toLowerCase() || 'agricultural product'}. Include: 
           1) Nutritional benefits and health properties
           2) Growing conditions and farming requirements  
@@ -42,13 +41,10 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({
           5) Interesting facts or varieties
           Be informative, engaging, and focus on practical information for consumers. Format with clear sections.`;
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://agroconnect.app',
-          'X-Title': 'AgroConnect Chatbot'
         },
         body: JSON.stringify({
           model: 'arcee-ai/trinity-mini:free',

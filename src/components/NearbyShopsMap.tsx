@@ -154,7 +154,6 @@ const NearbyShopsMap = () => {
     try {
       console.log('Calling discover-shops function with coords:', coords);
 
-      const OPENROUTER_API_KEY = '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';
       const promptText = `Generate a realistic list of 8-10 farm shops and organic markets near coordinates ${coords[0]}, ${coords[1]}.
 For each shop, provide detailed analysis including:
 - id: unique identifier
@@ -172,13 +171,10 @@ For each shop, provide detailed analysis including:
 Return ONLY a JSON array with this exact structure, no other text:
 [{"id": "1", "name": "...", "address": "...", "lat": number, "lng": number, "description": "...", "qualityScore": number, "priceCompetitiveness": number, "popularityScore": number, "environmentalScore": number, "varietyScore": number}]`;
 
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'https://agroconnect.app',
-          'X-Title': 'AgroConnect'
         },
         body: JSON.stringify({
           model: 'arcee-ai/trinity-mini:free',
