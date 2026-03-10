@@ -126,7 +126,7 @@ const ImageUpload = () => {
     try {
       console.log("🖼️ Sending image for AI Vision analysis...");
       
-      const OPENROUTER_API_KEY = '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';
+      const OPENROUTER_API_KEY = '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';
       const promptText = "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise.";
 
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {

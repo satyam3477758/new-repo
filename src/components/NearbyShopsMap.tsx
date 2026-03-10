@@ -154,7 +154,7 @@ const NearbyShopsMap = () => {
     try {
       console.log('Calling discover-shops function with coords:', coords);
 
-      const OPENROUTER_API_KEY = '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';
+      const OPENROUTER_API_KEY = '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';
       const promptText = `Generate a realistic list of 8-10 farm shops and organic markets near coordinates ${coords[0]}, ${coords[1]}.
 For each shop, provide detailed analysis including:
 - id: unique identifier
