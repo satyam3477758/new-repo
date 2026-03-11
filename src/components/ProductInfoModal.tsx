@@ -43,7 +43,7 @@ const ProductInfoModal: React.FC<ProductInfoModalProps> = ({
           Be informative, engaging, and focus on practical information for consumers. Format with clear sections.`;
 
       const replyText = await callAI({
-        model: 'arcee-ai/trinity-mini:free',
+        model: 'google/gemma-3-4b-it:free',
         messages: [{ role: 'user', content: promptText }]
       });
 

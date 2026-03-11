@@ -173,7 +173,7 @@ Return ONLY a JSON array with this exact structure, no other text:
 [{"id": "1", "name": "...", "address": "...", "lat": number, "lng": number, "description": "...", "qualityScore": number, "priceCompetitiveness": number, "popularityScore": number, "environmentalScore": number, "varietyScore": number}]`;
 
       const aiResponse = await callAI({
-        model: 'arcee-ai/trinity-mini:free',
+        model: 'google/gemma-3-4b-it:free',
         messages: [
           {
             role: 'system',

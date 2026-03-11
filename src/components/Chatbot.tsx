@@ -69,7 +69,7 @@ const Chatbot = () => {
       const promptText = `You are ${botName}, a friendly agricultural assistant. Answer this question about farming, crops, or agriculture: "${inputMessage.trim()}". Be helpful, informative, and conversational. If the question is not related to agriculture, politely redirect to farming topics.`;
 
       const replyText = await callAI({
-        model: 'arcee-ai/trinity-mini:free',
+        model: 'google/gemma-3-4b-it:free',
         messages: [{ role: 'user', content: promptText }]
       });
 

@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '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';
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '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';
 
   try {
     const { model, messages, max_tokens, temperature } = req.body;

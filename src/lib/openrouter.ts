@@ -1,4 +1,4 @@
-const OPENROUTER_API_KEY = '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';
+const OPENROUTER_API_KEY = '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';
 
 interface AIRequestOptions {
   model: string;
@@ -11,31 +11,16 @@ interface AIRequestOptions {
 }
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  let response: Response;
-
-  // Check if we're in local dev (Vite) or production (Vercel)
-  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
-
-  if (isDev) {
-    // Local development: call OpenRouter directly (no CORS issues from localhost)
-    response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://agroconnect.app',
-        'X-Title': 'AgroConnect',
-      },
-      body: JSON.stringify(options),
-    });
-  } else {
-    // Production (Vercel): use the /api/ai serverless proxy to bypass CORS
-    response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(options),
-    });
-  }
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': window.location.origin,
+      'X-Title': 'AgroConnect',
+    },
+    body: JSON.stringify(options),
+  });
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -44,9 +29,13 @@ export async function callAI(options: AIRequestOptions): Promise<string> {
   }
 
   const data = await response.json();
-  const content = data.choices?.[0]?.message?.content;
+  const message = data.choices?.[0]?.message;
+  
+  // Some models return content directly, others use reasoning field
+  const content = message?.content || message?.reasoning || null;
 
   if (!content) {
+    console.error('Unexpected AI response structure:', JSON.stringify(data));
     throw new Error('Empty response from AI');
   }
 
