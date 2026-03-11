@@ -8,11 +8,13 @@ interface AIRequestOptions {
   temperature?: number;
 }
 
+// Backend URL — set VITE_BACKEND_URL in production to your Render URL
+// e.g. https://agro-connect-backend.onrender.com
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  // Always use the /api/ai serverless proxy
-  // The API key is stored as a Vercel environment variable (OPENROUTER_API_KEY)
-  // This prevents the key from being exposed in client-side code or on GitHub
-  const response = await fetch('/api/ai', {
+  // Proxy through backend to keep API key secret
+  const response = await fetch(`${BACKEND_URL}/api/ai`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

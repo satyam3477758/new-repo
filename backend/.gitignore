@@ -1,0 +1,14 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+server
+
+# Environment
+.env
+
+# IDE
+.idea/
+.vscode/

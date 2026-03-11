@@ -15,7 +15,6 @@ import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
-import ImageAnalysis from "./pages/ImageAnalysis";
 import OrderHistory from "./pages/OrderHistory";
 import NearbyShops from "./pages/NearbyShops";
 import FAQs from "./pages/FAQs";
@@ -40,11 +39,6 @@ const App = () => (
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<ContactUs />} />
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/image-analysis" element={
-                  <ProtectedRoute>
-                    <ImageAnalysis />
-                  </ProtectedRoute>
-                } />
                 <Route path="/orders" element={
                   <ProtectedRoute>
                     <OrderHistory />

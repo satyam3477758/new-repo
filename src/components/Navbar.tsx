@@ -5,12 +5,12 @@ import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { 
-  ShoppingCart, 
-  Menu, 
-  User, 
-  LogOut, 
-  Eye, 
+import {
+  ShoppingCart,
+  Menu,
+  User,
+  LogOut,
+  Eye,
   Home,
   Store,
   Phone,
@@ -79,15 +79,13 @@ const Navbar = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`relative flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 group ${
-                      active
+                    className={`relative flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 group ${active
                         ? "text-primary bg-primary/10 shadow-sm"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                    }`}
+                      }`}
                   >
-                    <IconComponent className={`h-4 w-4 transition-transform group-hover:scale-110 ${
-                      active ? "text-primary" : ""
-                    }`} />
+                    <IconComponent className={`h-4 w-4 transition-transform group-hover:scale-110 ${active ? "text-primary" : ""
+                      }`} />
                     <span>{link.label}</span>
                     {active && (
                       <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl"></div>
@@ -129,9 +127,9 @@ const Navbar = () => {
 
               {/* Cart Button */}
               <Link to="/shop">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   className="relative p-2.5 hover:bg-primary/10 hover:text-primary transition-all duration-300 group"
                 >
                   <ShoppingCart className="h-5 w-5 group-hover:scale-110 transition-transform" />
@@ -173,11 +171,10 @@ const Navbar = () => {
                             <Link
                               key={link.path}
                               to={link.path}
-                              className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-                                active
+                              className={`flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 ${active
                                   ? "text-primary bg-primary/10"
                                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                              }`}
+                                }`}
                               onClick={() => setIsMenuOpen(false)}
                             >
                               <IconComponent className="h-5 w-5" />
