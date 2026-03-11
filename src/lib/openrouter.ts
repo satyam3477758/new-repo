@@ -8,9 +8,8 @@ interface AIRequestOptions {
   temperature?: number;
 }
 
-// Backend URL — set VITE_BACKEND_URL in production to your Render URL
-// e.g. https://agro-connect-backend.onrender.com
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || '';
+// Backend URL — defaults to Render deployment, override with VITE_BACKEND_URL if needed
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'https://new-repo-74oe.onrender.com';
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
   // Proxy through backend to keep API key secret
