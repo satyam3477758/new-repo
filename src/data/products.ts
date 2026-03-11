@@ -1,7 +1,6 @@
 
 // Import all product images
 import organicRedApples from '@/assets/organic-red-apples.jpg';
-import freshGardenSpinach from '@/assets/fresh-garden-spinach.jpg';
 import freeRangeEggs from '@/assets/free-range-eggs.jpg';
 import heirloomTomatoes from '@/assets/heirloom-tomatoes.jpg';
 import wildflowerHoney from '@/assets/wildflower-honey.jpg';
@@ -29,7 +28,7 @@ export const products = [
     category: "Vegetables",
     price: 45,
     unit: "bunch",
-    image: freshGardenSpinach,
+    image: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=600&fit=crop&auto=format&q=80",
     organic: true,
     description: "Nutrient-rich organic spinach leaves, freshly harvested from our sustainable farm. Great for salads, smoothies, or cooking."
   },

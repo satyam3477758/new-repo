@@ -1,5 +1,3 @@
-const OPENROUTER_API_KEY = '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';
-
 interface AIRequestOptions {
   model: string;
   messages: Array<{
@@ -11,28 +9,17 @@ interface AIRequestOptions {
 }
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  let response: Response;
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-  if (import.meta.env.DEV) {
-    // Local development: call OpenRouter directly
-    response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://agroconnect.app',
-        'X-Title': 'AgroConnect',
-      },
-      body: JSON.stringify(options),
-    });
-  } else {
-    // Production (Vercel): use the serverless proxy to avoid CORS
-    response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(options),
-    });
-  }
+  const response = await fetch(`${supabaseUrl}/functions/v1/chat-ai`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${supabaseKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(options),
+  });
 
   if (!response.ok) {
     const errorText = await response.text();
