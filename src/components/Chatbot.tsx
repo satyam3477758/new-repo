@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from "lucide-react";
+import { MessageCircle, X, Send, Bot, User, Loader as Loader2, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { callAI } from "@/lib/openrouter";
@@ -53,15 +53,6 @@ const Chatbot = () => {
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
 
-    if (!user || !session) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to use the chatbot.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
       role: 'user',
@@ -89,7 +80,6 @@ const Chatbot = () => {
         timestamp: new Date()
       };
 
-      // Add typing delay for better UX
       setTimeout(() => {
         setMessages(prev => [...prev, botResponse]);
         setIsTyping(false);
@@ -104,7 +94,7 @@ const Chatbot = () => {
         content: "I'm having trouble connecting right now. Please try again in a moment!",
         timestamp: new Date()
       };
-      
+
       setTimeout(() => {
         setMessages(prev => [...prev, errorMessage]);
         setIsTyping(false);
