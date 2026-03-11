@@ -12,7 +12,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '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';
+  const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+
+  if (!OPENROUTER_API_KEY) {
+    return res.status(500).json({ error: 'OPENROUTER_API_KEY environment variable is not set' });
+  }
 
   try {
     const { model, messages, max_tokens, temperature } = req.body;

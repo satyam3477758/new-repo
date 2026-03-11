@@ -1,5 +1,3 @@
-const OPENROUTER_API_KEY = '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';
-
 interface AIRequestOptions {
   model: string;
   messages: Array<{
@@ -11,13 +9,13 @@ interface AIRequestOptions {
 }
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  // Always use the /api/ai serverless proxy
+  // The API key is stored as a Vercel environment variable (OPENROUTER_API_KEY)
+  // This prevents the key from being exposed in client-side code or on GitHub
+  const response = await fetch('/api/ai', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': window.location.origin,
-      'X-Title': 'AgroConnect',
     },
     body: JSON.stringify(options),
   });
