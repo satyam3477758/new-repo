@@ -8,6 +8,7 @@ import { Loader as Loader2, Upload, Eye, Camera, CircleCheck as CheckCircle, Spa
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import AnalysisChart from "./AnalysisChart";
+import { callAI } from "@/lib/openrouter";
 
 interface ImageAnalysisResult {
   analysis: string;
@@ -124,30 +125,27 @@ const ImageUpload = () => {
     setAnalysisProgress(0);
 
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      const promptText = "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise.";
 
-      const response = await fetch(`${supabaseUrl}/functions/v1/analyze-image`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          imageData: selectedImage,
-          prompt: "Analyze this agricultural image briefly: 1) Crop type, 2) Health status, 3) Growth stage, 4) Visible issues, 5) Recommendations. Be concise."
-        }),
+      const analysisText = await callAI({
+        model: 'nvidia/nemotron-nano-12b-v2-vl:free',
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: promptText },
+              { type: 'image_url', image_url: { url: selectedImage, detail: 'auto' } }
+            ]
+          }
+        ],
+        max_tokens: 300,
+        temperature: 0.2
       });
 
-      if (!response.ok) {
-        throw new Error(`Analysis failed: ${response.statusText}`);
-      }
-
-      const data = await response.json();
       setAnalysisProgress(100);
 
       setTimeout(() => {
-        setAnalysisResult(data.analysis);
+        setAnalysisResult(analysisText);
         setIsAnalyzing(false);
         toast({
           title: "Analysis complete",

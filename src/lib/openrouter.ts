@@ -11,21 +11,35 @@ interface AIRequestOptions {
 }
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  // Always call OpenRouter directly — works in local dev
-  // In production (Vercel), the /api/ai proxy is also available but this works too
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://agroconnect.app',
-      'X-Title': 'AgroConnect',
-    },
-    body: JSON.stringify(options),
-  });
+  let response: Response;
+
+  // Check if we're in local dev (Vite) or production (Vercel)
+  const isDev = typeof import.meta !== 'undefined' && import.meta.env?.DEV;
+
+  if (isDev) {
+    // Local development: call OpenRouter directly (no CORS issues from localhost)
+    response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://agroconnect.app',
+        'X-Title': 'AgroConnect',
+      },
+      body: JSON.stringify(options),
+    });
+  } else {
+    // Production (Vercel): use the /api/ai serverless proxy to bypass CORS
+    response = await fetch('/api/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(options),
+    });
+  }
 
   if (!response.ok) {
     const errorText = await response.text();
+    console.error('AI API error:', response.status, errorText);
     throw new Error(`AI API error ${response.status}: ${errorText}`);
   }
 
