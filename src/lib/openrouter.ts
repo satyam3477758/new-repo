@@ -1,3 +1,5 @@
+const OPENROUTER_API_KEY = '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';
+
 interface AIRequestOptions {
   model: string;
   messages: Array<{
@@ -9,14 +11,15 @@ interface AIRequestOptions {
 }
 
 export async function callAI(options: AIRequestOptions): Promise<string> {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-  const response = await fetch(`${supabaseUrl}/functions/v1/chat-ai`, {
+  // Always call OpenRouter directly — works in local dev
+  // In production (Vercel), the /api/ai proxy is also available but this works too
+  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${supabaseKey}`,
+      'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://agroconnect.app',
+      'X-Title': 'AgroConnect',
     },
     body: JSON.stringify(options),
   });
