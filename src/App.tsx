@@ -17,6 +17,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import OrderHistory from "./pages/OrderHistory";
 import NearbyShops from "./pages/NearbyShops";
+import ImageAnalysis from "./pages/ImageAnalysis";
 import FAQs from "./pages/FAQs";
 import ShippingPolicy from "./pages/ShippingPolicy";
 import ReturnPolicy from "./pages/ReturnPolicy";
@@ -47,6 +48,11 @@ const App = () => (
                 <Route path="/nearby-shops" element={
                   <ProtectedRoute>
                     <NearbyShops />
+                  </ProtectedRoute>
+                } />
+                <Route path="/image-analysis" element={
+                  <ProtectedRoute>
+                    <ImageAnalysis />
                   </ProtectedRoute>
                 } />
                 <Route path="/faqs" element={<FAQs />} />
